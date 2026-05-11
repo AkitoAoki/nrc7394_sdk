@@ -1,41 +1,107 @@
-/*
- * MIT License
- *
- * Copyright (c) 2024 Newracom, Inc.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
- */
+//**************************************************************************
+//  システム名 : WAH0070 / Newracom NRC SDK サンプル通信処理
+//  概要       : TCP接続・切断・データ送信処理を外部公開するための
+//             : ネットワークサービス用ヘッダーファイル
+//--------------------------------------------------------------------------
+//  バージョン   日付        更新区分    内容
+//  1.00.00      26/05/11    新規        初版リリース
+//  1.00.01      26/05/11    変更        コメントガイドラインに沿った
+//                                      詳細日本語コメントを追加
+//**************************************************************************
+//  ライセンス : MIT License
+//  Copyright  : Copyright (c) 2024 Newracom, Inc.
+//--------------------------------------------------------------------------
+//  本ファイルは、Newracom社サンプルコードを元に、
+//  WAH0070評価・組込み用途で内容を追いやすくするため、
+//  日本語コメントを追加したものです。
+//**************************************************************************
 
 #ifndef __NETWORK_SERVICE_H__
 #define __NETWORK_SERVICE_H__
 
+//======================================================
+//  C++コンパイラ対応
+//======================================================
+//  C++環境から本ヘッダーファイルをインクルードした場合でも、
+//  C言語で実装された関数名がC++の名前修飾を受けないようにする。
+//
+//  C++では関数オーバーロード対応のため、コンパイル時に関数名が
+//  変更されることがある。extern "C" を指定することで、
+//  C言語側の .c ファイルに定義された関数と正しくリンクできる。
+//======================================================
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+//**************************************************************************
+//  関数種別：外部参照可能関数
+//  処理概要：指定されたリモートIPアドレスおよびポート番号へ
+//          ：TCPクライアント接続を行う
+//--------------------------------------------------------------------------
+//  引    数：char *remote_address
+//          ：  接続先IPアドレス文字列
+//          ：  例）"192.168.1.100"、IPv6有効時はIPv6文字列も想定
+//          ：uint16_t port
+//          ：  接続先TCPポート番号
+//  戻 り 値：true  = 接続成功
+//          ：false = 接続失敗
+//--------------------------------------------------------------------------
+//  補足説明：
+//          ：本関数は、内部でsocket()によりTCPソケットを生成し、
+//          ：connect()により指定先へ接続する。
+//          ：接続に成功したソケットは、実装ファイル側の静的変数
+//          ：sockfdで保持される想定である。
+//          ：送信処理 upload_data_packet() を使用する前に、
+//          ：本関数で接続を確立しておく必要がある。
+//**************************************************************************
 bool open_connection(char *remote_address, uint16_t port);
+
+//**************************************************************************
+//  関数種別：外部参照可能関数
+//  処理概要：現在保持しているTCP接続を切断し、ソケットを閉じる
+//--------------------------------------------------------------------------
+//  引    数：none
+//  戻 り 値：none
+//--------------------------------------------------------------------------
+//  補足説明：
+//          ：内部で保持しているソケットが有効な場合、shutdown()で
+//          ：送受信を停止した後、close()でソケットを解放する。
+//          ：切断後はソケット管理変数を無効値に戻す想定である。
+//          ：通信終了時、再接続前、異常発生後の後始末として使用する。
+//**************************************************************************
 void close_connection(void);
+
+//**************************************************************************
+//  関数種別：外部参照可能関数
+//  処理概要：TCP接続済みソケットへ指定データを送信する
+//          ：送信失敗時は再接続を行い、規定回数まで再送を試みる
+//--------------------------------------------------------------------------
+//  引    数：char *remote_address
+//          ：  再接続時に使用する接続先IPアドレス文字列
+//          ：uint16_t port
+//          ：  再接続時に使用する接続先TCPポート番号
+//          ：char *data
+//          ：  送信データ格納バッファの先頭アドレス
+//          ：int data_length
+//          ：  送信データ長[byte]
+//  戻 り 値：true  = 送信成功
+//          ：false = 送信失敗
+//--------------------------------------------------------------------------
+//  補足説明：
+//          ：本関数は、内部の送信処理でエラーが発生した場合、
+//          ：close_connection()およびopen_connection()相当の処理により、
+//          ：TCP接続を再確立してから再送する構成である。
+//          ：WAH0070を使用したIoT用途では、無線品質やサーバー状態により
+//          ：一時的に送信失敗が発生する可能性があるため、
+//          ：簡易的な再接続・再送処理を持つ構成になっている。
+//**************************************************************************
 bool upload_data_packet(char *remote_address, uint16_t port, char* data, int data_length);
 
+//======================================================
+//  C++コンパイラ対応 終了
+//======================================================
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif  // __NETWORK_SERVICE_H__
