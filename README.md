@@ -1,49 +1,56 @@
-# NRC7394 Standalone SDK Package
+# NRC7394 スタンドアロン SDK パッケージ
 
-## Notice
+## 注意事項
 
 > [!NOTE]
-> **For Module Makers:**
-All NRC7394-based modules require system initialization and RF calibration before they can operate correctly. Please consult Newracom regarding these procedures prior to beginning module design.
-> 
-> **For Device Makers:**
-Devices may be built using NRC7394 chipsets directly or by integrating pre-calibrated modules from approved third-party OEMs. If you choose to use the chipset directly, please consult Newracom about the required initialization and calibration procedures before starting device design.
+> **モジュールメーカー向け:**
+> すべての NRC7394 ベースのモジュールは、正常に動作する前にシステム初期化および RF キャリブレーションが必要です。モジュール設計を開始する前に、これらの手順について Newracom にご相談ください。
+>
+> **デバイスメーカー向け:**
+> デバイスは、NRC7394 チップセットを直接使用して構築することも、承認済みのサードパーティ OEM が提供する事前キャリブレーション済みモジュールを組み込んで構築することもできます。チップセットを直接使用する場合は、デバイス設計を開始する前に、必要な初期化およびキャリブレーション手順について Newracom にご相談ください。
 
 > [!CAUTION]
-> The software package released here is specifically designed for the NRC7394 EVK, and the accompanying board data file in https://github.com/newracom/nrc7394_sdk/tree/master/package/bdf/nrc7394 is intended solely for this model.
-> If users plan to use this software package with other devices that incorporate the NRC7394 chip, they should utilize the board data file supplied by the device's vendor.
+> ここで公開されているソフトウェアパッケージは、NRC7394 EVK 専用に設計されています。また、https://github.com/newracom/nrc7394_sdk/tree/master/package/bdf/nrc7394 に含まれる付属のボードデータファイルは、このモデル専用です。
+> NRC7394 チップを搭載した他のデバイスでこのソフトウェアパッケージを使用する場合は、そのデバイスのベンダーから提供されるボードデータファイルを使用してください。
 
-### Release roadmap
+### リリースロードマップ
+
 - v1.3.5 (2025.12.30)
-- v1.3.4 (2025.04.30) (hotfix)
+- v1.3.4 (2025.04.30) (ホットフィックス)
 - v1.3.3 (2025.04.04)
-- v1.3.2 (2024.12.27) (hotfix)
-- v1.3.1 (2024.12.13) (hotfix)
+- v1.3.2 (2024.12.27) (ホットフィックス)
+- v1.3.1 (2024.12.13) (ホットフィックス)
 - v1.3 (2024.11.22)
-- v1.2.2 (2024.06.21) (hotfix)
-- v1.2.1 (2024.04.30) (hotfix)
+- v1.2.2 (2024.06.21) (ホットフィックス)
+- v1.2.1 (2024.04.30) (ホットフィックス)
 - v1.2 (2023.11.30)
 - v1.1 (2023.08.17)
 - v1.0 (2023.08.07)
 
-### Latest release
+### 最新リリース
+
 - [NRC7394_Standalone_SDK_v1.3.5](https://github.com/newracom/nrc7394_sdk/releases/tag/v1.3.5)
-  - WPA3-SAE H2E is enabled by default.
-  - Please refer to the [UG-7394-008-Memory_Map.pdf](https://github.com/newracom/nrc7394_sdk/blob/master/package/doc/UG-7394-008-Memory_Map.pdf) for the latest memory map updates.
-  - The default build configuration is designed for 4MB flash memory. If you are using a 2MB flash memory module, please include the ALIAS "+2m" option. 
-    - (ex) make select target=nrc7394.sdk.release+2m APP_NAME=ATCMD_UART  
-  - When using 2MB flash memory, some applications may not support certain features. For instance, in ATCMD, the following features are not available: WPS, CONT_TX, IPV6 and FOTA with HTTPS.
+  - WPA3-SAE H2E はデフォルトで有効です。
+  - 最新のメモリマップ更新については、[UG-7394-008-Memory_Map.pdf](https://github.com/newracom/nrc7394_sdk/blob/master/package/doc/UG-7394-008-Memory_Map.pdf) を参照してください。
+  - デフォルトのビルド設定は 4MB フラッシュメモリ向けに設計されています。2MB フラッシュメモリモジュールを使用する場合は、ALIAS の "+2m" オプションを含めてください。
+    - 例: `make select target=nrc7394.sdk.release+2m APP_NAME=ATCMD_UART`
+  - 2MB フラッシュメモリを使用する場合、一部のアプリケーションでは特定の機能をサポートしないことがあります。たとえば ATCMD では、WPS、CONT_TX、IPV6、および HTTPS を使用した FOTA は利用できません。
 
-### Release package contents
-- NRC7394 standalone SDK package for global regulatory domains
+### リリースパッケージの内容
 
-## NRC7394 Standalone SDK User Guide
-### Get NRC7394 Standalone SDK Package
-NRC7394 Standalone SDK package is provided in this repository. Please use the following git command to get it.
-```
+- グローバル規制ドメイン向け NRC7394 スタンドアロン SDK パッケージ
+
+## NRC7394 スタンドアロン SDK ユーザーガイド
+
+### NRC7394 スタンドアロン SDK パッケージの取得
+
+NRC7394 スタンドアロン SDK パッケージは、このリポジトリで提供されています。取得するには、次の git コマンドを使用してください。
+
+```sh
 cd ~/
 git clone https://github.com/newracom/nrc7394_sdk.git
 ```
 
-### Get the detailed user guide
-Please refer to [UG-7394-004-Standalone SDK.pdf](https://github.com/newracom/nrc7394_sdk/blob/master/package/doc/UG-7394-004-Standalone%20SDK.pdf) in doc directory. 
+### 詳細なユーザーガイドの取得
+
+詳細については、doc ディレクトリにある [UG-7394-004-Standalone SDK.pdf](https://github.com/newracom/nrc7394_sdk/blob/master/package/doc/UG-7394-004-Standalone%20SDK.pdf) を参照してください。
